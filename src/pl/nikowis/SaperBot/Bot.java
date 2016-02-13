@@ -60,8 +60,8 @@ public class Bot {
     }
 	
 	public void writeBoardToConsole(){
-	    for(int row = 0; row < Board.SIZE; row++){
-	            for(int column = 0; column <Board.SIZE; column++){
+	    for(int column = 0; column < Board.SIZE; column++){
+	            for(int row = 0; row <Board.SIZE; row++){
 	                switch(board.fields[row][column]){
 	                    case UNCHECKED :
 	                        System.out.print(" X");
@@ -185,4 +185,13 @@ public class Bot {
         getBoardState();
         return true;
     }
+	
+	public void setFlag(int i, int j){
+		robot.mouseMove(boardCoordinates[0]+6+(i-1)*interspaceX,boardCoordinates[1]+10+(j-1)*interspaceY);
+        robot.delay(100);
+        robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+        robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+        robot.mouseMove(1,1);
+        robot.delay(200);
+	}
 }
