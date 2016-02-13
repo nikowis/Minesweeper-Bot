@@ -6,6 +6,9 @@ public enum EFieldState {
 	TWO,
 	THREE,
 	FOUR,
+	FIVE,
 	UNCHECKED,
-	BOMB
+	BOMB,
+	FLAG;
+
 }

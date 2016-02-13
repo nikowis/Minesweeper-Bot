@@ -27,7 +27,7 @@ public class Bot {
             System.out.println(ex.getMessage());
         }
 		getScreenshot();
-		
+		getBoardState();
 	}
 	
 	private void getScreenshot(){
@@ -81,9 +81,14 @@ public class Bot {
 	                    case FOUR :
 	                        System.out.print(" 4");
 	                        break;
+	                    case FIVE :
+	                        System.out.print(" 5");
+	                        break;
 	                    case BOMB :
 	                        System.out.print(" B");
 	                        break;
+	                    default :
+	                    	System.out.println("ERROR WRITING BOARD TO CONSOLE");
 	                        
 	                }
 	            }
@@ -100,11 +105,10 @@ public class Bot {
         if(!(boardCoordinates==null)){
             for(int row = 0; row < Board.SIZE;row++){
                 for(int column = 0; column <Board.SIZE; column++){
-                    //tutaj sprawdzamy jaka jest dana komorka i zapisujemy w pola
                     for(int i = 1; i<10;i++){
                        // robot.mouseMove(boardCoordinates[0]+i+column*odstepX,boardCoordinates[1]+i+row*odstepY);
                        // robot.delay(50);
-                    	pixelColor = screenshot.getRGB(boardCoordinates[0]+i+column*interspaceX,boardCoordinates[1]+i+row*interspaceY);
+                    	pixelColor = screenshot.getRGB(boardCoordinates[0]+i+row*interspaceX,boardCoordinates[1]+i+column*interspaceY);
                         
                     	if(pixelColor == Board.coveredField){
                         	board.fields[row][column] = EFieldState.UNCHECKED;
@@ -120,6 +124,14 @@ public class Bot {
                         }
                         else if(pixelColor == Board.three){
                         	board.fields[row][column] = EFieldState.THREE;
+                            break;
+                        }
+                        else if(pixelColor == Board.four){
+                        	board.fields[row][column] = EFieldState.FOUR;
+                            break;
+                        }
+                        else if(pixelColor == Board.five){
+                        	board.fields[row][column] = EFieldState.FIVE;
                             break;
                         }
                         else if(pixelColor == Board.bomb){
@@ -148,25 +160,29 @@ public class Bot {
         return false;
     }
 	
-	public void clickField(int i, int j){
-		if(hasLost()){
-        	System.out.println("You lost...");
-        	return;
-        }
+	public boolean clickField(int i, int j){
+		
 		if(!boardDetected){
 			System.out.println("Board not detected");
-			return;
+			return false;
 		}
+		if(hasLost()){
+        	System.out.println("You lost...");
+        	return false;
+        }
         if(i>Board.SIZE+1 || j > Board.SIZE+1)
-            return;
-        robot.mouseMove(boardCoordinates[0]+5+(i-1)*interspaceX,boardCoordinates[1]+5+(j-1)*interspaceY);
-        robot.delay(300);
+        {
+        	System.out.println("ERROR OUT OF BOUNDS IN CLICKFIELD");
+            return false;
+        }
+        robot.mouseMove(boardCoordinates[0]+6+(i-1)*interspaceX,boardCoordinates[1]+10+(j-1)*interspaceY);
+        robot.delay(100);
         robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
         robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
-        robot.mouseMove(0,0);
+        robot.mouseMove(1,1);
         robot.delay(200);
         
         getBoardState();
-        
+        return true;
     }
 }

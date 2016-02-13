@@ -7,7 +7,6 @@ public class Board {
 		for(int i=0;i<SIZE;i++)
 			for(int j=0;j<SIZE;j++)
 				fields[i][j]=EFieldState.UNCHECKED;
-
 	}
 	
 	public static int boardCorner[] = {-4144960,-4144960,-65794,-263173,-4144960,-4342339,
@@ -18,6 +17,8 @@ public class Board {
 	public static int one = -16776961;
 	public static int two = -16745728;
 	public static int three = -65536;
+	public static int four = -16777093;
+	public static int five = -8716288;
 	public static int bomb = -16777216;
 	public static final int SIZE = 8;
 	
