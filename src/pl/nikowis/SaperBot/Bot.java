@@ -8,6 +8,7 @@ import java.awt.event.InputEvent;
 import java.awt.image.BufferedImage;
 
 public class Bot {
+	private static final int DELAY=100;
 	private Robot robot;
     private BufferedImage screenshot; 
     private Board board;
@@ -36,6 +37,7 @@ public class Bot {
 	
 	private int[] findWindow(){
         int matchingPixels = 0;
+        boardDetected = false;
         int [] point = {1,1};
         for(int x = 1; x<Toolkit.getDefaultToolkit().getScreenSize().getWidth();x++)
         {
@@ -59,7 +61,7 @@ public class Bot {
         return null;
     }
 	
-	public void writeBoardToConsole(){
+	private void writeBoardToConsole(){
 	    for(int column = 0; column < Board.SIZE; column++){
 	            for(int row = 0; row <Board.SIZE; row++){
 	                switch(board.fields[row][column]){
@@ -97,17 +99,15 @@ public class Bot {
 	    System.out.println("\n------------------\n");
 	    }
 	
-	public void getBoardState(){
+	private void getBoardState(){
         int pixelColor;
         robot.mouseMove(1, 1);
         getScreenshot();
         boardCoordinates = findWindow();
-        if(!(boardCoordinates==null)){
+        if(boardDetected){
             for(int row = 0; row < Board.SIZE;row++){
                 for(int column = 0; column <Board.SIZE; column++){
                     for(int i = 1; i<10;i++){
-                       // robot.mouseMove(boardCoordinates[0]+i+column*odstepX,boardCoordinates[1]+i+row*odstepY);
-                       // robot.delay(50);
                     	pixelColor = screenshot.getRGB(boardCoordinates[0]+i+row*interspaceX,boardCoordinates[1]+i+column*interspaceY);
                         
                     	if(pixelColor == Board.coveredField){
@@ -147,12 +147,11 @@ public class Bot {
         }
     }
 	
-	//Checking
 	public boolean hasLost(){
-		int x=boardCoordinates[0]+63;
-		int y=boardCoordinates[1]-25;
         if(boardDetected){
-            for(int yi= y; yi<y+8;yi++){
+        	int x=boardCoordinates[0]+63;
+    		int y=boardCoordinates[1]-21;
+            for(int yi= y; yi<y+5;yi++){
                    if(screenshot.getRGB(x,yi)==Board.face)
                            return true;
             }
@@ -167,7 +166,6 @@ public class Bot {
 			return false;
 		}
 		if(hasLost()){
-        	System.out.println("You lost...");
         	return false;
         }
         if(i>Board.SIZE+1 || j > Board.SIZE+1)
@@ -176,11 +174,11 @@ public class Bot {
             return false;
         }
         robot.mouseMove(boardCoordinates[0]+6+(i-1)*interspaceX,boardCoordinates[1]+10+(j-1)*interspaceY);
-        robot.delay(100);
+        robot.delay(DELAY);
         robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
         robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
         robot.mouseMove(1,1);
-        robot.delay(200);
+        robot.delay(DELAY);
         
         getBoardState();
         return true;
@@ -188,10 +186,37 @@ public class Bot {
 	
 	public void setFlag(int i, int j){
 		robot.mouseMove(boardCoordinates[0]+6+(i-1)*interspaceX,boardCoordinates[1]+10+(j-1)*interspaceY);
-        robot.delay(100);
-        robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
-        robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+		robot.delay(DELAY);
+        robot.mousePress(InputEvent.BUTTON3_DOWN_MASK);
+        robot.mouseRelease(InputEvent.BUTTON3_DOWN_MASK);
         robot.mouseMove(1,1);
-        robot.delay(200);
+        robot.delay(DELAY);
+	}
+
+	public boolean hasPossiblyWon(){
+        if(boardDetected){
+    		int x=boardCoordinates[0]+63;
+    		int y=boardCoordinates[1]-25;
+            for(int yi= y; yi<y+4;yi++){
+                   if(screenshot.getRGB(x,yi)==Board.face)
+                           return true;
+            }
+            return false;
+        }
+        return true;
+	}
+
+	public boolean reset() {
+		if(boardDetected){
+    		int x=boardCoordinates[0]+63;
+    		int y=boardCoordinates[1]-25;
+    		robot.mouseMove(x, y);
+    		robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+            robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+            robot.mouseMove(1,1);
+            getBoardState();
+            return true;
+       }
+		return false;
 	}
 }
