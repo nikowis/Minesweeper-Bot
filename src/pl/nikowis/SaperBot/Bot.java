@@ -16,6 +16,7 @@ public class Bot {
     private boolean boardDetected;
     private int interspaceX;
     private int interspaceY;
+    public int movesLeft =40;
     
 	public Bot(Board board){
 		interspaceX=interspaceY=16;
@@ -108,9 +109,10 @@ public class Bot {
             for(int row = 0; row < Board.SIZE;row++){
                 for(int column = 0; column <Board.SIZE; column++){
                     for(int i = 1; i<10;i++){
-                    	pixelColor = screenshot.getRGB(boardCoordinates[0]+i+row*interspaceX,boardCoordinates[1]+i+column*interspaceY);
-                        
-                    	if(pixelColor == Board.coveredField){
+                    	pixelColor = screenshot.getRGB(boardCoordinates[0]+i+row*interspaceX,boardCoordinates[1]+i+3+column*interspaceY);
+                        //robot.mouseMove(boardCoordinates[0]+i+row*interspaceX,boardCoordinates[1]+i+4+column*interspaceY);
+                    	//robot.delay(50);
+                        if(pixelColor == Board.coveredField){
                         	board.fields[row][column] = EFieldState.UNCHECKED;
                             break;
                         }
@@ -148,6 +150,8 @@ public class Bot {
     }
 	
 	public boolean hasLost(){
+		if(movesLeft <1)
+			return true;
         if(boardDetected){
         	int x=boardCoordinates[0]+63;
     		int y=boardCoordinates[1]-21;
@@ -160,7 +164,7 @@ public class Bot {
     }
 	
 	public boolean clickField(int i, int j){
-		
+		movesLeft--;
 		if(!boardDetected){
 			System.out.println("Board not detected");
 			return false;
@@ -208,6 +212,7 @@ public class Bot {
 
 	public boolean reset() {
 		if(boardDetected){
+			movesLeft=20;
     		int x=boardCoordinates[0]+63;
     		int y=boardCoordinates[1]-25;
     		robot.mouseMove(x, y);

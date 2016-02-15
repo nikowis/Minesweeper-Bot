@@ -151,7 +151,7 @@ public class MyMain {
 		Bot bot = new Bot(scanBoard);
 		Board gameBoard = new Board();
 		int []a;
-		
+		//bot.clickField(1, 1);
 		do{
 		gameBoard=new Board();
 		bot.clickField(1, 1);
@@ -163,7 +163,7 @@ public class MyMain {
 			a=getNextRand(gameBoard);
 			bot.clickField(a[0], a[1]);
 		}
-		if(!bot.hasLost())
+		if(!bot.hasLost() || bot.movesLeft <1)
 				break;
 		}while(bot.reset());
 
