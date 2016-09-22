@@ -1,0 +1,7 @@
+.classpath
+.project
+.settings/org.eclipse.jdt.core.prefs
+bin/pl/nikowis/SaperBot/Board.class
+bin/pl/nikowis/SaperBot/Bot.class
+bin/pl/nikowis/SaperBot/EFieldState.class
+bin/pl/nikowis/SaperBot/MyMain.class
